@@ -28,10 +28,15 @@ class SearchArticlesFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val activity = requireNotNull(this.activity) {
+            "You can only access the viewModel after onViewCreated()"
+        }
         searchArticlesViewModel =
-            ViewModelProvider(this).get(SearchArticlesViewModel::class.java)
+            ViewModelProvider(this, SearchArticlesViewModel.Factory(activity?.application)).get(
+                SearchArticlesViewModel::class.java
+            )
         searchArticlesViewModel.articles.observe(viewLifecycleOwner, Observer {
-            Log.d("SearchArticlesFragment", "Live Data of Articles: ${it?.get(0)?.web_url}")
+            Log.d("SearchArticlesFragment", "Live Data of Articles: ${it?.size}")
         })
 
 

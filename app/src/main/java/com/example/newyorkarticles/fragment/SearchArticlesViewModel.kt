@@ -25,4 +25,14 @@ class SearchArticlesViewModel(application: Application) : AndroidViewModel(appli
             repository.getArticles(searchTerm)
         }
     }
+
+    class Factory(private val app: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(SearchArticlesViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return SearchArticlesViewModel(app) as T
+            }
+            throw IllegalArgumentException("Unable to construct viewmodel")
+        }
+    }
 }
