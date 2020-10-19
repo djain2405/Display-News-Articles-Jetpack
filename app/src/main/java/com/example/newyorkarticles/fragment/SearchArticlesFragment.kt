@@ -5,11 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.example.newyorkarticles.R
 import kotlinx.android.synthetic.main.fragment_main.*
 
-class SearchArticlesFragment: Fragment() {
+class SearchArticlesFragment : Fragment() {
+
+    private val searchArticlesViewModel by lazy {
+        ViewModelProvider(this).get(SearchArticlesViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,6 +27,7 @@ class SearchArticlesFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         search_button.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.articleDetailFragment)
         }
