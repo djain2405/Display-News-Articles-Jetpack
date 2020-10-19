@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NewYorkArticles</string>
+    <string name="enter_search_term_hint">Enter Search Term Here</string>
+    <string name="search">Search</string>
 </resources>
