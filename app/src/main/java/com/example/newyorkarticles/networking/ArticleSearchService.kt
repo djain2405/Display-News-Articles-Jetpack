@@ -13,10 +13,10 @@ import retrofit2.http.Query
 interface ArticleSearchService {
 
     @GET("svc/search/v2/articlesearch.json")
-    fun searchArticles(
+    suspend fun searchArticles(
         @Query("q") searchTerm: String,
         @Query("api-key") apiKey: String = "OKsEwghCzAPR3kRr7Hp51cFn2tMfXWgj"
-    ): Call<ArticleResponse>
+    ): ArticleResponse
 }
 
 object Network {
@@ -28,9 +28,7 @@ object Network {
         .build()
     val articleSearchService = retrofit.create(ArticleSearchService::class.java)
 
-    fun getArticles(callback: Callback<ArticleResponse>) {
-        val call: Call<ArticleResponse> =
-            articleSearchService.searchArticles(searchTerm = "elections")
-        call.enqueue(callback)
+    suspend fun getArticles(searchTerm: String): ArticleResponse {
+        return articleSearchService.searchArticles(searchTerm)
     }
 }

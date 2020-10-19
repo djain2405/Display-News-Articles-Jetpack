@@ -1,34 +1,29 @@
 package com.example.newyorkarticles.fragment
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.newyorkarticles.model.Article
-import com.example.newyorkarticles.model.ArticleResponse
 import com.example.newyorkarticles.networking.Network
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.*
 
 class SearchArticlesViewModel : ViewModel() {
-    var articles: List<Article>? = listOf()
-    private val callback = object : Callback<ArticleResponse> {
-        override fun onResponse(call: Call<ArticleResponse>, response: Response<ArticleResponse>) {
-            Log.d(
-                "SearchArticlesViewModel",
-                "articles are in count: ${response?.body()?.response?.docs?.size}"
-            )
+    private val _articles = MutableLiveData<List<Article>>()
+
+    val articles: LiveData<List<Article>>
+        get() = _articles
+
+
+    fun fetchArticles(searchTerm: String) {
+        viewModelScope.launch() {
+            withContext(Dispatchers.IO) {
+                val articles = Network.getArticles(searchTerm)?.response?.docs
+                withContext(Dispatchers.Main) {
+                    _articles.value = articles
+                }
+            }
         }
-
-        override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {
-            Log.d(
-                "SearchArticlesViewModel",
-                "articles are errored out: ${t?.message}"
-            )
-        }
-    }
-
-
-    init {
-        Network.getArticles(callback)
     }
 }
