@@ -1,5 +1,6 @@
 package com.example.newyorkarticles.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -13,8 +14,8 @@ interface ArticleDao {
     fun addArticles(articles: List<Article>)
 
     @Query("SELECT * from articles")
-    fun getArticles(): List<Article>
+    fun getArticles(): LiveData<List<Article>>
 
     @Query("SELECT * from articles WHERE _id=:articleId")
-    fun getArticleById(articleId: String): Article
+    fun getArticleById(articleId: String): LiveData<Article>
 }
