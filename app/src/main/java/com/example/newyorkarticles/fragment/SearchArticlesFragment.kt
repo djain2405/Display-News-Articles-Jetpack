@@ -31,7 +31,7 @@ class SearchArticlesFragment : Fragment() {
         searchArticlesViewModel =
             ViewModelProvider(this).get(SearchArticlesViewModel::class.java)
         searchArticlesViewModel.articles.observe(viewLifecycleOwner, Observer {
-            Log.d("SearchArticlesFragment", "Live Data of Articles: ${it[0]}")
+            Log.d("SearchArticlesFragment", "Live Data of Articles: ${it?.get(0)?.web_url}")
         })
 
 
