@@ -5,25 +5,38 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.newyorkarticles.ArticleAdapter
 import com.example.newyorkarticles.R
+import com.example.newyorkarticles.databinding.FragmentMainBinding
 import kotlinx.android.synthetic.main.fragment_main.*
 
 class SearchArticlesFragment : Fragment() {
 
     private lateinit var searchArticlesViewModel: SearchArticlesViewModel
+    private lateinit var viewModelAdapter: ArticleAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+
+        val binding: FragmentMainBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
+        viewModelAdapter = ArticleAdapter()
+        binding.articleList?.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = viewModelAdapter
+        }
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -31,9 +44,12 @@ class SearchArticlesFragment : Fragment() {
         searchArticlesViewModel =
             ViewModelProvider(this).get(SearchArticlesViewModel::class.java)
         searchArticlesViewModel.articles.observe(viewLifecycleOwner, Observer {
-            Log.d("SearchArticlesFragment", "Live Data of Articles: ${it?.get(0)?.web_url}")
-        })
 
+//            Log.d("SearchArticlesFragment", "Live Data of Articles: ${it?.size}")
+            it.apply {
+                viewModelAdapter.articles = it
+            }
+        })
 
         search_button.setOnClickListener {
 
